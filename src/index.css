@@ -1,0 +1,248 @@
+@import 'tailwindcss';
+
+:root {
+  --background: 220 23% 95%;
+  --foreground: 220 20% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 20% 10%;
+  --primary: 211 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 220 20% 10%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+  --accent: 211 100% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 211 100% 50%;
+  --radius: 1rem;
+}
+
+.dark {
+  --background: 220 40% 8%;
+  --foreground: 0 0% 95%;
+  --card: 220 40% 10%;
+  --card-foreground: 0 0% 95%;
+  --popover: 220 40% 10%;
+  --popover-foreground: 0 0% 95%;
+  --primary: 211 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 40% 15%;
+  --secondary-foreground: 0 0% 95%;
+  --muted: 220 40% 15%;
+  --muted-foreground: 220 10% 60%;
+  --accent: 211 100% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 220 40% 20%;
+  --input: 220 40% 20%;
+  --ring: 211 100% 50%;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  min-height: 100vh;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Global button styles */
+button {
+  cursor: pointer;
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke,
+    opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Clickable elements */
+[onclick],
+[role='button'],
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.font-ultralight {
+  font-weight: 100;
+}
+
+.tracking-tighter {
+  letter-spacing: -0.05em;
+}
+
+.tracking-tight {
+  letter-spacing: -0.025em;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-morphism-dark {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-sidebar {
+  background: rgba(30, 30, 40, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.weather-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.weather-gradient-sunny {
+  background: linear-gradient(135deg, #f6c365 0%, #fda085 100%);
+}
+
+.weather-gradient-cloudy {
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.weather-gradient-rainy {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.weather-gradient-night {
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+}
+
+/* Text contrast for light backgrounds - exclude sidebar */
+.text-contrast-dark {
+  --tw-text-opacity: 1;
+}
+
+/* Force sidebar text to remain white */
+.glass-sidebar *:not(input) {
+  color: white !important;
+}
+
+.glass-sidebar .text-white\/90 {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.glass-sidebar .text-white\/70 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.glass-sidebar .text-white\/60 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.glass-sidebar .text-white\/40 {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.glass-sidebar .text-white\/20 {
+  color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Ensure search input respects theme-based styling */
+input.text-gray-800 {
+  color: rgb(55 65 81) !important; /* Force dark text for light theme */
+}
+
+input.text-white {
+  color: white !important; /* Force white text for dark theme */
+}
+
+.text-contrast-dark
+  .text-white:not(.glass-sidebar *, input, .search-dropdown *) {
+  color: rgb(30 41 59 / var(--tw-text-opacity)) !important; /* slate-800 */
+}
+
+.text-contrast-dark
+  .text-white\/90:not(.glass-sidebar *, input, .search-dropdown *) {
+  color: rgb(30 41 59 / 0.9) !important;
+}
+
+.text-contrast-dark
+  .text-white\/70:not(.glass-sidebar *, input, .search-dropdown *) {
+  color: rgb(51 65 85 / 0.8) !important; /* slate-700 */
+}
+
+.text-contrast-dark
+  .text-white\/60:not(.glass-sidebar *, input, .search-dropdown *) {
+  color: rgb(71 85 105 / 0.9) !important; /* slate-600 */
+}
+
+.text-contrast-dark
+  .text-white\/40:not(.glass-sidebar *, input, .search-dropdown *) {
+  color: rgb(100 116 139 / 0.8) !important; /* slate-500 */
+}
+
+.text-contrast-dark
+  .text-white\/20:not(.glass-sidebar *, input, .search-dropdown *) {
+  color: rgb(148 163 184 / 0.6) !important; /* slate-400 */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@supports (backdrop-filter: blur(20px)) or (-webkit-backdrop-filter: blur(20px)) {
+  .glass-morphism {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .glass-sidebar {
+    background: rgba(30, 30, 40, 0.98);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+}
+
+/* Prevent horizontal scrolling on mobile and ensure full height */
+html,
+body {
+  overflow-x: hidden;
+  height: 100%;
+  min-height: 100vh;
+}
+
+/* Ensure root div covers full height */
+#root {
+  min-height: 100vh;
+  height: 100%;
+}
