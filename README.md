@@ -55,7 +55,14 @@ A modern, responsive weather application built with React, TypeScript, Tailwind 
 
 Follow these steps to run the application on your local machine:
 
-1. **Install dependencies**
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/LexaLukovka/weather.git
+   cd weather
+   ```
+
+2. **Install dependencies**
 
    ```bash
    npm install
@@ -63,7 +70,7 @@ Follow these steps to run the application on your local machine:
    yarn install
    ```
 
-2. **Configure environment variables**
+3. **Configure environment variables**
 
    Copy the example environment file and add your API key:
 
@@ -78,7 +85,7 @@ Follow these steps to run the application on your local machine:
    VITE_BASE_URL=https://api.weatherapi.com/v1
    ```
 
-3. **Start the development server**
+4. **Start the development server**
 
    ```bash
    npm run dev
@@ -86,7 +93,7 @@ Follow these steps to run the application on your local machine:
    yarn dev
    ```
 
-4. **Open the application**
+5. **Open the application**
 
    Navigate to [http://localhost:5173](http://localhost:5173) in your browser
 
