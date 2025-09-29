@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 
-import { SidebarWithToggle, WeatherMain } from './components';
-import { ErrorBoundary } from './components/ErrorBoundary';
+import { SidebarWithToggle, WeatherMain, ErrorBoundary } from './components';
+import { UI_CONSTANTS } from './constants';
 import { WeatherProvider } from './contexts/WeatherProvider';
 import {
   useSidebarState,
@@ -16,14 +16,19 @@ const App: FC = () => {
 
   useInitialCity();
   const handleRetry = useWeatherRetry();
-  const { sidebarOpen, handleToggleSidebar } = useSidebarState(150);
+  const { sidebarOpen, handleToggleSidebar } = useSidebarState(
+    UI_CONSTANTS.SIDEBAR_DEBOUNCE_DELAY
+  );
   const { backgroundClass, isLightTheme, textContrastClass } =
     useWeatherTheme(currentWeather);
 
   return (
     <ErrorBoundary>
       <div
-        className={`min-h-screen ${backgroundClass} ${textContrastClass} transition-all duration-1000`}
+        className={`min-h-screen ${backgroundClass} ${textContrastClass} transition-all`}
+        style={{
+          transitionDuration: `${UI_CONSTANTS.THEME_TRANSITION_DURATION}ms`,
+        }}
       >
         <div className='flex flex-row h-screen'>
           <SidebarWithToggle

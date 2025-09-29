@@ -1,6 +1,6 @@
 export const API_CONFIG = {
   BASE_URL: import.meta.env.VITE_BASE_URL,
-  API_KEY: import.meta.env.VITE_WEATHERAPI_KEY || 'demo_key',
+  API_KEY: import.meta.env.VITE_WEATHERAPI_KEY || '',
   ENDPOINTS: {
     FORECAST: '/forecast.json',
   },
@@ -12,8 +12,4 @@ export const ERROR_MESSAGES = {
   API_ERROR: 'Unable to fetch weather data. Please try again later.',
   INVALID_INPUT: 'Please enter a valid city name.',
   RATE_LIMIT: 'Too many requests. Please try again in a moment.',
-} as const;
-
-export const STORAGE_KEYS = {
-  WEATHER_STATE: 'weather_app_state',
 } as const;

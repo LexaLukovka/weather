@@ -1,7 +1,9 @@
 import axios, { type AxiosResponse } from 'axios';
 
-import { API_CONFIG, ERROR_MESSAGES } from '../constants/api';
+import { API_CONFIG, ERROR_MESSAGES, UI_CONSTANTS } from '../constants';
 import { type ForecastApiResponse, type WeatherData } from '../types';
+import { CircuitBreaker, withRetry } from '../utils/retry';
+import { validateApiResponse } from '../utils/validation';
 
 export class WeatherApiError extends Error {
   public code?: string;
@@ -18,6 +20,7 @@ export class WeatherApiError extends Error {
 export class WeatherApiService {
   private readonly baseUrl: string;
   private readonly apiKey: string;
+  private readonly circuitBreaker: CircuitBreaker;
 
   constructor(
     baseUrl: string = API_CONFIG.BASE_URL,
@@ -25,10 +28,11 @@ export class WeatherApiService {
   ) {
     this.baseUrl = baseUrl;
     this.apiKey = apiKey;
+    this.circuitBreaker = new CircuitBreaker(3, 30000); // 3 failures, 30s timeout
   }
 
   /**
-   * Fetches current weather data by coordinates
+   * Fetches current weather data by coordinates with retry logic
    * @param lat - Latitude
    * @param lon - Longitude
    * @returns Promise<WeatherData> - Transformed weather data
@@ -38,90 +42,150 @@ export class WeatherApiService {
     lat: number,
     lon: number
   ): Promise<WeatherData> {
-    const url = this.buildUrl(API_CONFIG.ENDPOINTS.FORECAST, {
-      key: this.apiKey,
-      q: `${lat},${lon}`,
-      days: '7',
-      aqi: 'no',
-      alerts: 'no',
-    });
-
-    try {
-      const response: AxiosResponse<ForecastApiResponse> = await axios.get(url);
-
-      const data = response.data;
-      const weatherData = this.transformForecastData(data);
-
-      return {
-        ...weatherData,
-        isCurrentLocation: true,
-      };
-    } catch (error) {
-      if (error instanceof WeatherApiError) {
-        throw error;
-      }
-
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          await this.handleAxiosError(error.response.status);
-        } else if (error.request) {
-          throw new WeatherApiError(
-            ERROR_MESSAGES.NETWORK_ERROR,
-            'NETWORK_ERROR'
-          );
-        }
-      }
-
-      throw new WeatherApiError(ERROR_MESSAGES.NETWORK_ERROR, 'NETWORK_ERROR');
-    }
+    return this.circuitBreaker.call(() =>
+      this.getWeatherByCoordinatesInternal(lat, lon)
+    );
   }
 
   /**
-   * Fetches current weather data for a given city
+   * Internal method for fetching weather by coordinates
+   */
+  private getWeatherByCoordinatesInternal = withRetry(
+    async (lat: number, lon: number): Promise<WeatherData> => {
+      const url = this.buildUrl(API_CONFIG.ENDPOINTS.FORECAST, {
+        key: this.apiKey,
+        q: `${lat},${lon}`,
+        days: UI_CONSTANTS.FORECAST_DAYS.toString(),
+        aqi: 'no',
+        alerts: 'no',
+      });
+
+      try {
+        const response: AxiosResponse<ForecastApiResponse> =
+          await axios.get(url);
+
+        const data = validateApiResponse(response.data);
+        const weatherData = this.transformForecastData(data);
+
+        return {
+          ...weatherData,
+          isCurrentLocation: true,
+        };
+      } catch (error) {
+        if (error instanceof WeatherApiError) {
+          throw error;
+        }
+
+        if (axios.isAxiosError(error)) {
+          if (error.response) {
+            await this.handleAxiosError(error.response.status);
+          } else if (error.request) {
+            throw new WeatherApiError(
+              ERROR_MESSAGES.NETWORK_ERROR,
+              'NETWORK_ERROR'
+            );
+          }
+        }
+
+        throw new WeatherApiError(
+          ERROR_MESSAGES.NETWORK_ERROR,
+          'NETWORK_ERROR'
+        );
+      }
+    },
+    {
+      shouldRetry: error => {
+        if (error instanceof WeatherApiError) {
+          // Don't retry on client errors (4xx) except rate limiting (429)
+          return (
+            !error.statusCode ||
+            error.statusCode >= 500 ||
+            error.statusCode === 429
+          );
+        }
+        return true;
+      },
+    }
+  );
+
+  /**
+   * Fetches current weather data for a given city with retry logic
    * @param city - The city name to search for
    * @returns Promise<WeatherData> - Transformed weather data
    * @throws {WeatherApiError} - When API call fails or city is not found
    */
   async getCurrentWeather(city: string): Promise<WeatherData> {
-    if (!city.trim()) {
-      throw new WeatherApiError(ERROR_MESSAGES.INVALID_INPUT, 'INVALID_INPUT');
-    }
-
-    const url = this.buildUrl(API_CONFIG.ENDPOINTS.FORECAST, {
-      key: this.apiKey,
-      q: city.trim(),
-      days: '7',
-      aqi: 'no',
-      alerts: 'no',
-    });
-
-    try {
-      const response: AxiosResponse<ForecastApiResponse> = await axios.get(url);
-
-      const data = response.data;
-      return this.transformForecastData(data);
-    } catch (error) {
-      if (error instanceof WeatherApiError) {
-        throw error;
-      }
-
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          await this.handleAxiosError(error.response.status);
-        } else if (error.request) {
-          throw new WeatherApiError(
-            ERROR_MESSAGES.NETWORK_ERROR,
-            'NETWORK_ERROR'
-          );
-        } else {
-          throw new WeatherApiError(error.message, 'REQUEST_ERROR');
-        }
-      }
-
-      throw new WeatherApiError(ERROR_MESSAGES.NETWORK_ERROR, 'NETWORK_ERROR');
-    }
+    return this.circuitBreaker.call(() => this.getCurrentWeatherInternal(city));
   }
 
+  private getCurrentWeatherInternal = withRetry(
+    async (city: string): Promise<WeatherData> => {
+      if (!city.trim()) {
+        throw new WeatherApiError(
+          ERROR_MESSAGES.INVALID_INPUT,
+          'INVALID_INPUT'
+        );
+      }
+
+      const url = this.buildUrl(API_CONFIG.ENDPOINTS.FORECAST, {
+        key: this.apiKey,
+        q: city.trim(),
+        days: UI_CONSTANTS.FORECAST_DAYS.toString(),
+        aqi: 'no',
+        alerts: 'no',
+      });
+
+      try {
+        const response: AxiosResponse<ForecastApiResponse> =
+          await axios.get(url);
+
+        const data = validateApiResponse(response.data);
+        return this.transformForecastData(data);
+      } catch (error) {
+        if (error instanceof WeatherApiError) {
+          throw error;
+        }
+
+        if (axios.isAxiosError(error)) {
+          if (error.response) {
+            await this.handleAxiosError(error.response.status);
+          } else if (error.request) {
+            throw new WeatherApiError(
+              ERROR_MESSAGES.NETWORK_ERROR,
+              'NETWORK_ERROR'
+            );
+          } else {
+            throw new WeatherApiError(error.message, 'REQUEST_ERROR');
+          }
+        }
+
+        throw new WeatherApiError(
+          ERROR_MESSAGES.NETWORK_ERROR,
+          'NETWORK_ERROR'
+        );
+      }
+    },
+    {
+      shouldRetry: error => {
+        if (error instanceof WeatherApiError) {
+          // Don't retry on client errors (4xx) except rate limiting (429)
+          return (
+            !error.statusCode ||
+            error.statusCode >= 500 ||
+            error.statusCode === 429
+          );
+        }
+        return true;
+      },
+    }
+  );
+
+  /**
+   * Builds a complete URL from endpoint and parameters
+   * @param endpoint - API endpoint path
+   * @param params - Query parameters to append
+   * @returns Complete URL string
+   */
   private buildUrl(endpoint: string, params: Record<string, string>): string {
     const baseUrl = this.baseUrl.startsWith('http')
       ? this.baseUrl
@@ -139,6 +203,11 @@ export class WeatherApiService {
     return url.toString();
   }
 
+  /**
+   * Handles Axios HTTP errors and throws appropriate WeatherApiError
+   * @param statusCode - HTTP status code from failed request
+   * @throws {WeatherApiError} - Specific error based on status code
+   */
   private async handleAxiosError(statusCode: number): Promise<never> {
     switch (statusCode) {
       case 400:
@@ -180,6 +249,11 @@ export class WeatherApiService {
     }
   }
 
+  /**
+   * Transforms raw WeatherAPI forecast response into normalized WeatherData format
+   * @param data - Raw forecast response from WeatherAPI
+   * @returns Normalized WeatherData object with current conditions, forecasts, and metadata
+   */
   private transformForecastData(data: ForecastApiResponse): WeatherData {
     const today = data.forecast.forecastday[0];
     const current = data.current;

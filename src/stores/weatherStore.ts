@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { STORAGE_KEYS } from '../constants/api';
+import { STORAGE_KEYS } from '../constants';
 
 import { createWeatherActions } from './weatherStore.actions';
 import { type WeatherState } from './weatherStore.types';

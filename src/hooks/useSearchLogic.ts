@@ -7,12 +7,10 @@ import {
   type KeyboardEvent,
 } from 'react';
 
+import { UI_CONSTANTS } from '../constants';
 import { citiesService } from '../services/citiesService';
 import { useWeatherStore } from '../stores';
 import { type CityOption, type SearchHistoryItem } from '../types';
-
-const SEARCH_DEBOUNCE_MS = 100;
-const BLUR_DELAY_MS = 300;
 
 export function useSearchLogic() {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -25,6 +23,7 @@ export function useSearchLogic() {
 
   const isSelectingRef = useRef<boolean>(false);
   const dropdownShouldStayClosedRef = useRef<boolean>(false);
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { searchWeather, searchHistory, searchFromHistory, currentWeather } =
     useWeatherStore();
@@ -43,7 +42,7 @@ export function useSearchLogic() {
   }, []);
 
   const handleSearch = useCallback((query: string) => {
-    if (query.trim().length >= 2) {
+    if (query.trim().length >= UI_CONSTANTS.MIN_SEARCH_LENGTH) {
       const cities = citiesService.searchCities(query);
       setSuggestions(cities);
       setShowDropdown(cities.length > 0);
@@ -68,7 +67,7 @@ export function useSearchLogic() {
 
       const trimmedTerm = searchTerm.trim();
       const shouldShowHistory = isFocused && trimmedTerm.length === 0;
-      const shouldSearch = trimmedTerm.length >= 2;
+      const shouldSearch = trimmedTerm.length >= UI_CONSTANTS.MIN_SEARCH_LENGTH;
 
       if (shouldSearch) {
         setLoading(true);
@@ -82,7 +81,7 @@ export function useSearchLogic() {
         setShowDropdown(false);
         setLoading(false);
       }
-    }, SEARCH_DEBOUNCE_MS);
+    }, UI_CONSTANTS.SEARCH_DEBOUNCE_DELAY);
 
     return () => clearTimeout(timeoutId);
   }, [searchTerm, isFocused, handleSearch]);
@@ -113,6 +112,16 @@ export function useSearchLogic() {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Cleanup effect for blur timeout
+  useEffect(() => {
+    return () => {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+        blurTimeoutRef.current = null;
+      }
+    };
   }, []);
 
   const handleSubmit = useCallback(
@@ -223,7 +232,12 @@ export function useSearchLogic() {
   }, []);
 
   const handleBlur = useCallback(() => {
-    setTimeout(() => {
+    // Clear existing timeout to prevent memory leaks
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+    }
+
+    blurTimeoutRef.current = setTimeout(() => {
       setIsFocused(false);
       if (
         !document.activeElement ||
@@ -231,7 +245,8 @@ export function useSearchLogic() {
       ) {
         dropdownShouldStayClosedRef.current = false;
       }
-    }, BLUR_DELAY_MS);
+      blurTimeoutRef.current = null;
+    }, UI_CONSTANTS.BLUR_DELAY);
   }, []);
 
   return {

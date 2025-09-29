@@ -1,4 +1,4 @@
-import { STORE_CONFIG } from '../constants/store';
+import { STORE_CONFIG } from '../constants';
 import {
   type WeatherData,
   type SearchHistoryItem,

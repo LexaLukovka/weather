@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { UI_CONSTANTS } from '../constants';
 import { type WeatherData } from '../types';
 
 interface WeatherTheme {
@@ -38,7 +39,9 @@ export const useWeatherTheme = (
         hour = new Date().getHours();
       }
     }
-    const isNight = hour < 5 || hour > 20;
+    const isNight =
+      hour < UI_CONSTANTS.NIGHT_HOUR_END ||
+      hour > UI_CONSTANTS.NIGHT_HOUR_START;
 
     let backgroundClass = 'weather-gradient';
     if (isNight) {

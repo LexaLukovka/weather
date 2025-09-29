@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from '../constants/api';
+import { ERROR_MESSAGES } from '../constants';
 import { type WeatherData } from '../types';
 
 import { reverseGeocodeService } from './reverseGeocode';

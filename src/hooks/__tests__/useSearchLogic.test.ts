@@ -75,7 +75,7 @@ const setupSearchSuggestions = (result: RenderHookResult) => {
   });
 
   act(() => {
-    vi.advanceTimersByTime(100);
+    vi.advanceTimersByTime(300);
   });
 };
 
@@ -127,7 +127,7 @@ const setupCustomSearch = (result: RenderHookResult, searchTerm: string) => {
   });
 
   act(() => {
-    vi.advanceTimersByTime(100);
+    vi.advanceTimersByTime(300);
   });
 };
 
@@ -328,6 +328,9 @@ describe('useSearchLogic', () => {
     it('submits selected suggestion when index is valid', async () => {
       const { result } = renderHook(() => useSearchLogic());
 
+      act(() => {
+        result.current.handleFocus();
+      });
       setupSelectedSuggestion(result, 0);
 
       await testFormSubmission(result, mockSearchWeather, 'London');
@@ -352,6 +355,9 @@ describe('useSearchLogic', () => {
     it('handles ArrowDown navigation in suggestions', async () => {
       const { result } = renderHook(() => useSearchLogic());
 
+      act(() => {
+        result.current.handleFocus();
+      });
       setupSearchSuggestions(result);
 
       const { selectedIndex: firstIndex } = await testKeyboardNavigation(
@@ -372,6 +378,9 @@ describe('useSearchLogic', () => {
     it('handles ArrowUp navigation in suggestions', async () => {
       const { result } = renderHook(() => useSearchLogic());
 
+      act(() => {
+        result.current.handleFocus();
+      });
       setupSelectedSuggestion(result, 1);
 
       const { selectedIndex: firstIndex } = await testKeyboardNavigation(
@@ -392,6 +401,9 @@ describe('useSearchLogic', () => {
     it('handles Enter key to select suggestion', async () => {
       const { result } = renderHook(() => useSearchLogic());
 
+      act(() => {
+        result.current.handleFocus();
+      });
       setupSelectedSuggestion(result, 0);
 
       await testKeyboardNavigation(result, 'Enter', 13);
@@ -463,6 +475,9 @@ describe('useSearchLogic', () => {
     it('maintains selected index bounds during navigation', async () => {
       const { result } = renderHook(() => useSearchLogic());
 
+      act(() => {
+        result.current.handleFocus();
+      });
       setupSelectedSuggestion(result, 1); // Last item
 
       const { selectedIndex } = await testKeyboardNavigation(
@@ -508,8 +523,10 @@ describe('useSearchLogic', () => {
 
       setupCustomSearch(result, '');
 
+      expect(result.current.showDropdown).toBe(true);
+
       await testKeyboardNavigation(result, 'ArrowDown', 40, true);
-      // The actual behavior depends on showDropdown state
+      expect(result.current.selectedIndex).toBe(0);
     });
   });
 });

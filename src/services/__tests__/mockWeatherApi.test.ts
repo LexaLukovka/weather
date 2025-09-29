@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import { ERROR_MESSAGES } from '../../constants/api';
+import { ERROR_MESSAGES } from '../../constants';
 import { MockWeatherApiService } from '../mockWeatherApi';
 import { WeatherApiError } from '../weatherApi';
 

@@ -12,12 +12,6 @@ import { type WeatherError } from '../types';
 import { createMockError, expectElementToHaveClasses } from './utils';
 
 // Mock the components
-vi.mock('../components/ErrorBoundary', () => ({
-  ErrorBoundary: ({ children }: { children: ReactNode }) => (
-    <div data-testid='error-boundary'>{children}</div>
-  ),
-}));
-
 vi.mock('../components', () => ({
   SidebarWithToggle: ({
     isOpen,
@@ -48,6 +42,9 @@ vi.mock('../components', () => ({
     >
       {error && <button onClick={onRetry}>Retry</button>}
     </div>
+  ),
+  ErrorBoundary: ({ children }: { children: ReactNode }) => (
+    <div data-testid='error-boundary'>{children}</div>
   ),
 }));
 
@@ -163,8 +160,9 @@ describe('App', () => {
       'to-blue-600',
       'text-gray-800',
       'transition-all',
-      'duration-1000',
     ]);
+
+    expect(appContainer).toHaveStyle('transition-duration: 1000ms');
   });
 
   it('passes sidebar state correctly', () => {
