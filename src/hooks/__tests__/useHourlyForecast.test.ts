@@ -74,12 +74,14 @@ describe('useHourlyForecast', () => {
 
     expect(result.current.hourlyData).toEqual([
       {
+        id: '2023-01-01 12:00',
         time: 12,
         temp: 22,
         icon: 'icon-sunny.png-Sunny-32',
         isNow: true,
       },
       {
+        id: '2023-01-01 13:00',
         time: 13,
         temp: 23,
         icon: 'icon-partly-cloudy.png-Partly cloudy-32',

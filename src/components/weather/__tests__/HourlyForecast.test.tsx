@@ -1,8 +1,8 @@
+import { type ReactElement, type ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 import '@testing-library/jest-dom';
-import * as React from 'react';
 
 import { WeatherProvider } from '../../../contexts/WeatherProvider';
 import {
@@ -42,9 +42,27 @@ mockUseHourlyForecast.mockReturnValue({
   weatherSummary:
     'Clear conditions expected around 15:00. Wind gusts up to 10 m/s are making the temperature feel like 20°.',
   hourlyData: [
-    { time: 12, temp: 20, icon: <div>sunny-icon</div>, isNow: true },
-    { time: 13, temp: 22, icon: <div>sunny-icon</div>, isNow: false },
-    { time: 14, temp: 24, icon: <div>cloudy-icon</div>, isNow: false },
+    {
+      id: '2023-01-01 12:00',
+      time: 12,
+      temp: 20,
+      icon: <div>sunny-icon</div>,
+      isNow: true,
+    },
+    {
+      id: '2023-01-01 13:00',
+      time: 13,
+      temp: 22,
+      icon: <div>sunny-icon</div>,
+      isNow: false,
+    },
+    {
+      id: '2023-01-01 14:00',
+      time: 14,
+      temp: 24,
+      icon: <div>cloudy-icon</div>,
+      isNow: false,
+    },
   ],
 });
 
@@ -61,9 +79,10 @@ vi.mock('../HourlyForecastList', () => ({
     hourlyData,
   }: {
     hourlyData: Array<{
+      id: string;
       time: number;
       temp: number;
-      icon: React.ReactElement;
+      icon: ReactElement;
       isNow: boolean;
     }>;
   }) => (
@@ -78,13 +97,7 @@ vi.mock('../HourlyForecastList', () => ({
 }));
 
 vi.mock('../../layout', () => ({
-  Card: ({
-    children,
-    animate,
-  }: {
-    children: React.ReactNode;
-    animate?: boolean;
-  }) => (
+  Card: ({ children, animate }: { children: ReactNode; animate?: boolean }) => (
     <div data-testid='card' data-animate={animate}>
       {children}
     </div>

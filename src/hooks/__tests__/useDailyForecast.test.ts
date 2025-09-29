@@ -72,6 +72,7 @@ describe('useDailyForecast', () => {
 
     expect(result.current.dailyData).toEqual([
       {
+        date: '2023-01-01',
         day: 'Monday',
         high: 28,
         low: 18,
@@ -79,6 +80,7 @@ describe('useDailyForecast', () => {
         description: 'Sunny',
       },
       {
+        date: '2023-01-02',
         day: 'Tuesday',
         high: 25,
         low: 15,
@@ -107,6 +109,7 @@ describe('useDailyForecast', () => {
 
     expect(result.current.dailyData).toHaveLength(1);
     expect(result.current.dailyData[0]).toEqual({
+      date: '2023-01-01',
       day: 'Today',
       high: 30,
       low: 22,
@@ -210,6 +213,7 @@ describe('useDailyForecast', () => {
     const { result } = renderHook(() => useDailyForecast(weatherData));
 
     expect(result.current.dailyData[0]).toEqual({
+      date: '2023-01-06',
       day: 'Weekend',
       high: 0,
       low: -10,

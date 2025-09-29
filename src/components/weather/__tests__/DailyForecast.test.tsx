@@ -1,8 +1,8 @@
+import { type ReactElement, type ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 import '@testing-library/jest-dom';
-import * as React from 'react';
 
 import { WeatherProvider } from '../../../contexts/WeatherProvider';
 import { useWeather, useWindowSize, useDailyForecast } from '../../../hooks';
@@ -60,6 +60,7 @@ mockUseWindowSize.mockReturnValue({
 mockUseDailyForecast.mockReturnValue({
   dailyData: [
     {
+      date: '2023-01-01',
       day: 'Today',
       high: 25,
       low: 15,
@@ -67,6 +68,7 @@ mockUseDailyForecast.mockReturnValue({
       description: 'Sunny',
     },
     {
+      date: '2023-01-02',
       day: 'Monday',
       high: 22,
       low: 12,
@@ -74,6 +76,7 @@ mockUseDailyForecast.mockReturnValue({
       description: 'Cloudy',
     },
     {
+      date: '2023-01-03',
       day: 'Tuesday',
       high: 20,
       low: 10,
@@ -94,7 +97,7 @@ vi.mock('../DailyForecastItem', () => ({
       day: string;
       high: number;
       low: number;
-      icon: React.ReactElement;
+      icon: ReactElement;
       description: string;
     };
     index: number;
@@ -109,13 +112,7 @@ vi.mock('../DailyForecastItem', () => ({
 }));
 
 vi.mock('../../layout', () => ({
-  Card: ({
-    children,
-    animate,
-  }: {
-    children: React.ReactNode;
-    animate?: boolean;
-  }) => (
+  Card: ({ children, animate }: { children: ReactNode; animate?: boolean }) => (
     <div data-testid='card' data-animate={animate}>
       {children}
     </div>
@@ -194,6 +191,7 @@ describe('DailyForecast', () => {
     mockUseDailyForecast.mockReturnValueOnce({
       dailyData: [
         {
+          date: '2023-01-04',
           day: 'UnknownDay',
           high: 25,
           low: 15,

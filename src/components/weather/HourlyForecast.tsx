@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { memo, type FC } from 'react';
 
 import {
   useScrollIndicators,
@@ -9,7 +9,7 @@ import { Card } from '../layout';
 
 import { HourlyForecastList } from './HourlyForecastList';
 
-export const HourlyForecast: FC = () => {
+export const HourlyForecast: FC = memo(() => {
   const { weather } = useWeather();
   const { weatherSummary, hourlyData } = useHourlyForecast(weather);
   const { scrollRef, showLeftIndicator, showRightIndicator, handleScroll } =
@@ -58,4 +58,6 @@ export const HourlyForecast: FC = () => {
       </div>
     </Card>
   );
-};
+});
+
+HourlyForecast.displayName = 'HourlyForecast';

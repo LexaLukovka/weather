@@ -64,17 +64,11 @@ class CitiesService {
 
       if (cityName === searchTerm) {
         score = 100;
-      }
-
-      else if (cityName.startsWith(searchTerm)) {
+      } else if (cityName.startsWith(searchTerm)) {
         score = 90;
-      }
-
-      else if (cityName.includes(searchTerm)) {
+      } else if (cityName.includes(searchTerm)) {
         score = 70;
-      }
-
-      else if (this.fuzzyMatch(searchTerm, cityName)) {
+      } else if (this.fuzzyMatch(searchTerm, cityName)) {
         score = 50;
       }
 

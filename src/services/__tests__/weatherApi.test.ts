@@ -35,7 +35,7 @@ vi.mock('../../utils/retry', () => ({
 }));
 
 vi.mock('../../utils/validation', () => ({
-  validateApiResponse: vi.fn().mockImplementation((data) => data),
+  validateApiResponse: vi.fn().mockImplementation(data => data),
 }));
 
 const MOCK_API_RESPONSE: ForecastApiResponse = {

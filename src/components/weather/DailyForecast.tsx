@@ -1,11 +1,11 @@
-import { type FC } from 'react';
+import { memo, type FC } from 'react';
 
 import { useWindowSize, useDailyForecast, useWeather } from '../../hooks';
 import { Card } from '../layout';
 
 import { DailyForecastItem } from './DailyForecastItem';
 
-export const DailyForecast: FC = () => {
+export const DailyForecast: FC = memo(() => {
   const { weather } = useWeather();
   const { isMobile } = useWindowSize();
   const { dailyData } = useDailyForecast(weather);
@@ -36,7 +36,7 @@ export const DailyForecast: FC = () => {
       <div className='space-y-3'>
         {dailyData.map((day, index) => (
           <DailyForecastItem
-            key={index}
+            key={day.date}
             day={day}
             index={index}
             getShortDayName={getShortDayName}
@@ -45,4 +45,6 @@ export const DailyForecast: FC = () => {
       </div>
     </Card>
   );
-};
+});
+
+DailyForecast.displayName = 'DailyForecast';

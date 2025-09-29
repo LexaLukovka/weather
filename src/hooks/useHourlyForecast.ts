@@ -32,11 +32,24 @@ export const useHourlyForecast = (weather: WeatherData) => {
 
     const currentHourIndex = weather.hourlyForecast.findIndex(hour => {
       const hourTime = parseInt(hour.time.split(' ')[1].split(':')[0], 10);
-      // If we're past the current hour (even by minutes), look for the next hour
-      if (locationCurrentMinute > 0) {
-        return hourTime > locationCurrentHour;
+      const hourDate = hour.time.split(' ')[0];
+      const currentDate = weather.localtime.split(' ')[0];
+
+      // If it's a future date, include it
+      if (hourDate > currentDate) {
+        return true;
       }
-      return hourTime >= locationCurrentHour;
+
+      // If it's the same date, check the hour
+      if (hourDate === currentDate) {
+        // If we're past the current hour (even by minutes), look for the next hour
+        if (locationCurrentMinute > 0) {
+          return hourTime > locationCurrentHour;
+        }
+        return hourTime >= locationCurrentHour;
+      }
+
+      return false;
     });
 
     if (currentHourIndex === -1) {
@@ -55,6 +68,7 @@ export const useHourlyForecast = (weather: WeatherData) => {
         );
 
         return {
+          id: hour.time,
           time: hourTime,
           temp: Math.round(hour.temp_c),
           icon: weatherIcon,

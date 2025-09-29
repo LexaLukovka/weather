@@ -67,7 +67,9 @@ export const ForecastApiResponseSchema = z.object({
  * @returns Validated and typed ForecastApiResponse object
  * @throws {Error} Throws descriptive error if validation fails
  */
-export function validateApiResponse(data: ForecastApiResponse): ForecastApiResponse {
+export function validateApiResponse(
+  data: ForecastApiResponse
+): ForecastApiResponse {
   try {
     ForecastApiResponseSchema.parse(data);
     return data;

@@ -40,7 +40,7 @@ graph TB
 #### 1. User Interface Layer
 
 - **React Components**: UI rendering and user interactions
-- **shadcn/ui Components**: Reusable, accessible UI primitives  
+- **shadcn/ui Components**: Reusable, accessible UI primitives
 - **Custom Weather Icons**: SVG-based weather condition icons
 - **Responsive Layouts**: Mobile-first responsive design
 - **Dynamic Theming**: Weather-based background and styling
@@ -77,13 +77,13 @@ graph TB
 
 ### Core Technologies
 
-| Technology       | Version | Purpose           | Why Chosen                                                        |
-| ---------------- | ------- | ----------------- | ----------------------------------------------------------------- |
-| **React**        | 19.1    | UI Framework      | Latest features, concurrent rendering, improved performance       |
-| **TypeScript**   | 5.8     | Type Safety       | Strict typing, better DX, compile-time error catching            |
-| **Vite**         | 7.1     | Build Tool        | Lightning-fast HMR, native ESM, excellent dev experience        |
-| **Tailwind CSS** | 4.1     | Styling           | Next-gen utility framework, JIT compilation, modern CSS features |
-| **Axios**        | 1.12    | HTTP Client       | Request/response interceptors, automatic JSON handling           |
+| Technology       | Version | Purpose      | Why Chosen                                                       |
+| ---------------- | ------- | ------------ | ---------------------------------------------------------------- |
+| **React**        | 19.1    | UI Framework | Latest features, concurrent rendering, improved performance      |
+| **TypeScript**   | 5.8     | Type Safety  | Strict typing, better DX, compile-time error catching            |
+| **Vite**         | 7.1     | Build Tool   | Lightning-fast HMR, native ESM, excellent dev experience         |
+| **Tailwind CSS** | 4.1     | Styling      | Next-gen utility framework, JIT compilation, modern CSS features |
+| **Axios**        | 1.12    | HTTP Client  | Request/response interceptors, automatic JSON handling           |
 
 ### State Management
 
@@ -94,24 +94,24 @@ graph TB
 
 ### UI Components & Styling
 
-| Technology             | Purpose               | Why Chosen                                                 |
-| ---------------------- | --------------------- | ---------------------------------------------------------- |
-| **shadcn/ui**          | Component Library     | Headless, accessible, customizable, copy-paste approach   |
-| **Lucide React**       | Icons                 | Consistent icon set, tree-shakeable, excellent TS support |
-| **CVA**                | Component Variants    | Type-safe styling, variant management, composable classes |
-| **Tailwind Merge**     | Class Optimization    | Intelligent class merging, prevents style conflicts       |
-| **clsx**               | Conditional Classes   | Utility for conditional className construction             |
+| Technology         | Purpose             | Why Chosen                                                |
+| ------------------ | ------------------- | --------------------------------------------------------- |
+| **shadcn/ui**      | Component Library   | Headless, accessible, customizable, copy-paste approach   |
+| **Lucide React**   | Icons               | Consistent icon set, tree-shakeable, excellent TS support |
+| **CVA**            | Component Variants  | Type-safe styling, variant management, composable classes |
+| **Tailwind Merge** | Class Optimization  | Intelligent class merging, prevents style conflicts       |
+| **clsx**           | Conditional Classes | Utility for conditional className construction            |
 
 ### Testing & Quality
 
-| Technology               | Purpose              | Why Chosen                                            |
-| ------------------------ | -------------------- | ----------------------------------------------------- |
-| **Vitest**               | Test Runner          | Native ESM, fastest testing, excellent Vite integration |
-| **Testing Library**      | Component Testing    | User-centric testing, accessibility-focused          |
-| **jsdom**                | DOM Environment      | Lightweight DOM simulation for unit tests            |
-| **ESLint**               | Code Linting         | Code quality, consistency, TypeScript integration    |
-| **Prettier**             | Code Formatting      | Consistent code style, automatic formatting          |
-| **TypeScript Compiler** | Type Checking        | Static analysis, compile-time error detection        |
+| Technology              | Purpose           | Why Chosen                                              |
+| ----------------------- | ----------------- | ------------------------------------------------------- |
+| **Vitest**              | Test Runner       | Native ESM, fastest testing, excellent Vite integration |
+| **Testing Library**     | Component Testing | User-centric testing, accessibility-focused             |
+| **jsdom**               | DOM Environment   | Lightweight DOM simulation for unit tests               |
+| **ESLint**              | Code Linting      | Code quality, consistency, TypeScript integration       |
+| **Prettier**            | Code Formatting   | Consistent code style, automatic formatting             |
+| **TypeScript Compiler** | Type Checking     | Static analysis, compile-time error detection           |
 
 ## Data Flow
 
@@ -450,7 +450,13 @@ import type { FC, PropsWithChildren } from 'react';
 import { weatherApiService } from '../services/weatherApi';
 
 // Utility types for better type safety
-type WeatherTheme = 'sunny' | 'cloudy' | 'rainy' | 'snowy' | 'foggy' | 'default';
+type WeatherTheme =
+  | 'sunny'
+  | 'cloudy'
+  | 'rainy'
+  | 'snowy'
+  | 'foggy'
+  | 'default';
 type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 
 // Conditional types for better API modeling
@@ -498,7 +504,7 @@ function renderWithProviders(ui: ReactElement, options?: RenderOptions) {
       <WeatherProvider>{children}</WeatherProvider>
     </ErrorBoundary>
   );
-  
+
   return render(ui, { wrapper: Wrapper, ...options });
 }
 
@@ -580,7 +586,10 @@ class WeatherApiService implements WeatherService {
     // Comprehensive implementation with data transformation
   }
 
-  async getWeatherByCoordinates(lat: number, lon: number): Promise<WeatherData> {
+  async getWeatherByCoordinates(
+    lat: number,
+    lon: number
+  ): Promise<WeatherData> {
     // Location-based weather with enhanced data
   }
 }
@@ -734,7 +743,7 @@ private transformForecastData(data: ForecastApiResponse): WeatherData {
 
 private transformHourlyForecast(forecastDays: ApiForecastDay[]): HourlyForecastItem[] {
   const allHours: HourlyForecastItem[] = [];
-  
+
   forecastDays.forEach(day => {
     day.hour.forEach(hour => {
       allHours.push({
@@ -753,7 +762,7 @@ private transformHourlyForecast(forecastDays: ApiForecastDay[]): HourlyForecastI
 
 private transformDailyForecast(forecastDays: ApiForecastDay[]): DailyForecastItem[] {
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  
+
   return forecastDays.map((day, index) => {
     const date = new Date(day.date);
     const dayName = index === 0 ? 'Today' : dayNames[date.getDay()];
@@ -858,26 +867,37 @@ const timeModifiers = {
 ```typescript
 // Custom hook for dynamic weather theming
 export const useWeatherTheme = (weather: WeatherData | null) => {
-  const getWeatherTheme = useCallback((weatherData: WeatherData | null): WeatherTheme => {
-    if (!weatherData) return 'default';
-    
-    const condition = weatherData.description.toLowerCase();
-    
-    if (condition.includes('sun') || condition.includes('clear')) return 'sunny';
-    if (condition.includes('cloud') || condition.includes('overcast')) return 'cloudy';
-    if (condition.includes('rain') || condition.includes('drizzle')) return 'rainy';
-    if (condition.includes('snow') || condition.includes('blizzard')) return 'snowy';
-    if (condition.includes('fog') || condition.includes('mist')) return 'foggy';
-    
-    return 'default';
-  }, []);
+  const getWeatherTheme = useCallback(
+    (weatherData: WeatherData | null): WeatherTheme => {
+      if (!weatherData) return 'default';
 
-  const isNightTime = useCallback((weatherData: WeatherData | null): boolean => {
-    if (!weatherData?.localtime) return false;
-    
-    const hour = new Date(weatherData.localtime).getHours();
-    return hour < 6 || hour > 18; // Simple day/night logic
-  }, []);
+      const condition = weatherData.description.toLowerCase();
+
+      if (condition.includes('sun') || condition.includes('clear'))
+        return 'sunny';
+      if (condition.includes('cloud') || condition.includes('overcast'))
+        return 'cloudy';
+      if (condition.includes('rain') || condition.includes('drizzle'))
+        return 'rainy';
+      if (condition.includes('snow') || condition.includes('blizzard'))
+        return 'snowy';
+      if (condition.includes('fog') || condition.includes('mist'))
+        return 'foggy';
+
+      return 'default';
+    },
+    []
+  );
+
+  const isNightTime = useCallback(
+    (weatherData: WeatherData | null): boolean => {
+      if (!weatherData?.localtime) return false;
+
+      const hour = new Date(weatherData.localtime).getHours();
+      return hour < 6 || hour > 18; // Simple day/night logic
+    },
+    []
+  );
 
   const theme = getWeatherTheme(weather);
   const isNight = isNightTime(weather);
@@ -885,8 +905,10 @@ export const useWeatherTheme = (weather: WeatherData | null) => {
 
   const backgroundClass = useMemo(() => {
     const baseGradient = weatherThemes[theme].background;
-    const timeOverlay = isNight ? timeModifiers.night.backgroundOverlay : timeModifiers.day.backgroundOverlay;
-    
+    const timeOverlay = isNight
+      ? timeModifiers.night.backgroundOverlay
+      : timeModifiers.day.backgroundOverlay;
+
     return `bg-gradient-to-br ${baseGradient} ${timeOverlay}`;
   }, [theme, isNight]);
 

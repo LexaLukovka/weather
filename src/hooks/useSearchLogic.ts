@@ -83,7 +83,10 @@ export function useSearchLogic() {
       }
     }, UI_CONSTANTS.SEARCH_DEBOUNCE_DELAY);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      setLoading(false);
+    };
   }, [searchTerm, isFocused, handleSearch]);
 
   useEffect(() => {
@@ -114,13 +117,15 @@ export function useSearchLogic() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Cleanup effect for blur timeout
+  // Cleanup effect for blur timeout and other refs
   useEffect(() => {
     return () => {
       if (blurTimeoutRef.current) {
         clearTimeout(blurTimeoutRef.current);
         blurTimeoutRef.current = null;
       }
+      isSelectingRef.current = false;
+      dropdownShouldStayClosedRef.current = false;
     };
   }, []);
 

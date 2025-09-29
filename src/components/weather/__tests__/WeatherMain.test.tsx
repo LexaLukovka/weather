@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
@@ -30,7 +31,7 @@ vi.mock('../WelcomeMessage', () => ({
 }));
 
 vi.mock('../WeatherWrapper', () => ({
-  WeatherWrapper: ({ children }: { children: React.ReactNode }) => (
+  WeatherWrapper: ({ children }: { children: ReactNode }) => (
     <div data-testid='weather-wrapper'>{children}</div>
   ),
 }));

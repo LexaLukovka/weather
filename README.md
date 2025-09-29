@@ -110,10 +110,10 @@ yarn preview
 
 ### Environment Variables
 
-| Variable | Required | Description | Default |
-|----------|----------|-------------|---------|
-| `VITE_WEATHERAPI_KEY` | Yes | Your WeatherAPI key | - |
-| `VITE_BASE_URL` | Yes | WeatherAPI base URL | `https://api.weatherapi.com/v1` |
+| Variable              | Required | Description         | Default                         |
+| --------------------- | -------- | ------------------- | ------------------------------- |
+| `VITE_WEATHERAPI_KEY` | Yes      | Your WeatherAPI key | -                               |
+| `VITE_BASE_URL`       | Yes      | WeatherAPI base URL | `https://api.weatherapi.com/v1` |
 
 ### Getting a WeatherAPI Key
 
@@ -123,6 +123,7 @@ yarn preview
 4. Add it to your `.env` file
 
 The free tier includes:
+
 - 1,000,000 calls/month
 - Real-time weather
 - 14-day forecast
@@ -132,17 +133,17 @@ The free tier includes:
 
 ## Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server with hot reload |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build locally |
-| `npm run test` | Run all tests in watch mode |
-| `npm run test:ui` | Run tests with interactive UI |
-| `npm run test:coverage` | Generate test coverage report |
-| `npm run lint` | Lint code with ESLint |
-| `npm run format` | Format code with Prettier |
-| `npm run typecheck` | Check TypeScript types |
+| Script                  | Description                              |
+| ----------------------- | ---------------------------------------- |
+| `npm run dev`           | Start development server with hot reload |
+| `npm run build`         | Build for production                     |
+| `npm run preview`       | Preview production build locally         |
+| `npm run test`          | Run all tests in watch mode              |
+| `npm run test:ui`       | Run tests with interactive UI            |
+| `npm run test:coverage` | Generate test coverage report            |
+| `npm run lint`          | Lint code with ESLint                    |
+| `npm run format`        | Format code with Prettier                |
+| `npm run typecheck`     | Check TypeScript types                   |
 
 ## Architecture
 
@@ -233,14 +234,17 @@ npm test
 ### Common Issues
 
 #### API Key Issues
+
 - **Error: "Invalid API key"** - Make sure your API key is correctly set in `.env`
 - **Error: "Rate limit exceeded"** - Free tier limit reached, wait or upgrade plan
 
 #### Build Issues
+
 - **Module not found** - Run `npm install` to ensure all dependencies are installed
 - **Port already in use** - Change port in `vite.config.ts` or kill process on port 5173
 
 #### Environment Variables
+
 - **Variables not loading** - Ensure `.env` file is in project root
 - **Changes not reflecting** - Restart the dev server after changing `.env`
 
@@ -275,7 +279,7 @@ This project follows **Test-Driven Development (TDD)** principles:
 src/
 ├── components/
 │   ├── ui/__tests__/           # UI component tests
-│   ├── weather/__tests__/      # Weather component tests  
+│   ├── weather/__tests__/      # Weather component tests
 │   ├── search/__tests__/       # Search component tests
 │   └── layout/__tests__/       # Layout component tests
 ├── hooks/__tests__/            # Custom hook tests

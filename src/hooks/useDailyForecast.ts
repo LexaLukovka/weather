@@ -10,6 +10,7 @@ export const useDailyForecast = (weather: WeatherData) => {
     }
 
     return weather.dailyForecast.map(day => ({
+      date: day.date,
       day: day.day,
       high: day.maxTemp,
       low: day.minTemp,
