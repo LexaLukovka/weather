@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useWeatherStore } from '../../stores';
 import { type WeatherState } from '../../stores';
-import { type CityOption } from '../../types';
 import { useInitialCity } from '../useInitialCity';
 
 vi.mock('../../stores', () => ({
@@ -20,13 +19,7 @@ describe('useInitialCity', () => {
   });
 
   it('calls searchWeather when currentCity exists and loadingState is idle', () => {
-    const mockCity: CityOption = {
-      name: 'London',
-      country: 'UK',
-      countryCode: 'GB',
-      lat: 51.5074,
-      lng: -0.1278,
-    };
+    const mockCity = 'London';
 
     mockUseWeatherStore.mockReturnValue({
       currentCity: mockCity,

@@ -2,12 +2,12 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import '@testing-library/jest-dom';
-import { useWeather } from '../../../hooks';
+import { useWeather, useHourlyForecast } from '../../../hooks';
 import { WeatherCentered } from '../WeatherCentered';
 
-// Mock the useWeather hook
 vi.mock('../../../hooks');
 const mockUseWeather = vi.mocked(useWeather);
+const mockUseHourlyForecast = vi.mocked(useHourlyForecast);
 
 describe('WeatherCentered', () => {
   const mockWeatherData = {
@@ -30,6 +30,18 @@ describe('WeatherCentered', () => {
       weather: mockWeatherData,
       isLoading: false,
       error: null,
+    });
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [
+        {
+          id: 'test-hour-1',
+          time: 11,
+          temp: 23,
+          icon: <div>test-icon</div>,
+          isNow: true,
+        },
+      ],
+      weatherSummary: 'Test weather summary',
     });
   });
 
@@ -56,9 +68,22 @@ describe('WeatherCentered', () => {
       error: null,
     });
 
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [
+        {
+          id: 'test-hour-1',
+          time: 11,
+          temp: 22,
+          icon: <div>test-icon</div>,
+          isNow: true,
+        },
+      ],
+      weatherSummary: 'Test weather summary',
+    });
+
     render(<WeatherCentered />);
 
-    expect(screen.getByText('22°')).toBeInTheDocument(); // Math.round(22.4)
+    expect(screen.getByText('22°')).toBeInTheDocument();
     expect(screen.getByText('H:25° L:19°')).toBeInTheDocument(); // Math.round(25.2) and Math.round(18.8)
   });
 
@@ -74,6 +99,19 @@ describe('WeatherCentered', () => {
       weather: coldWeather,
       isLoading: false,
       error: null,
+    });
+
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [
+        {
+          id: 'test-hour-1',
+          time: 11,
+          temp: -5,
+          icon: <div>test-icon</div>,
+          isNow: true,
+        },
+      ],
+      weatherSummary: 'Test weather summary',
     });
 
     render(<WeatherCentered />);
@@ -92,6 +130,19 @@ describe('WeatherCentered', () => {
       weather: weatherWithLowercase,
       isLoading: false,
       error: null,
+    });
+
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [
+        {
+          id: 'test-hour-1',
+          time: 11,
+          temp: 23,
+          icon: <div>test-icon</div>,
+          isNow: true,
+        },
+      ],
+      weatherSummary: 'Test weather summary',
     });
 
     render(<WeatherCentered />);
@@ -189,6 +240,19 @@ describe('WeatherCentered', () => {
       error: null,
     });
 
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [
+        {
+          id: 'test-hour-1',
+          time: 11,
+          temp: 45,
+          icon: <div>test-icon</div>,
+          isNow: true,
+        },
+      ],
+      weatherSummary: 'Test weather summary',
+    });
+
     render(<WeatherCentered />);
 
     expect(screen.getByText('45°')).toBeInTheDocument();
@@ -209,6 +273,19 @@ describe('WeatherCentered', () => {
       error: null,
     });
 
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [
+        {
+          id: 'test-hour-1',
+          time: 11,
+          temp: 0,
+          icon: <div>test-icon</div>,
+          isNow: true,
+        },
+      ],
+      weatherSummary: 'Test weather summary',
+    });
+
     render(<WeatherCentered />);
 
     expect(screen.getByText('0°')).toBeInTheDocument();
@@ -225,6 +302,19 @@ describe('WeatherCentered', () => {
       weather: weatherWithEmptyCity,
       isLoading: false,
       error: null,
+    });
+
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [
+        {
+          id: 'test-hour-1',
+          time: 11,
+          temp: 23,
+          icon: <div>test-icon</div>,
+          isNow: true,
+        },
+      ],
+      weatherSummary: 'Test weather summary',
     });
 
     const { container } = render(<WeatherCentered />);
@@ -246,10 +336,45 @@ describe('WeatherCentered', () => {
       error: null,
     });
 
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [
+        {
+          id: 'test-hour-1',
+          time: 11,
+          temp: 23,
+          icon: <div>test-icon</div>,
+          isNow: true,
+        },
+      ],
+      weatherSummary: 'Test weather summary',
+    });
+
     const { container } = render(<WeatherCentered />);
 
     const descriptionElement = container.querySelector('.text-white\\/70');
     expect(descriptionElement).toBeInTheDocument();
     expect(descriptionElement).toHaveTextContent('');
+  });
+
+  it('falls back to weather.temperature when hourlyData is empty', () => {
+    const weatherWithTemp = {
+      ...mockWeatherData,
+      temperature: 18,
+    };
+
+    mockUseWeather.mockReturnValue({
+      weather: weatherWithTemp,
+      isLoading: false,
+      error: null,
+    });
+
+    mockUseHourlyForecast.mockReturnValue({
+      hourlyData: [],
+      weatherSummary: 'Test weather summary',
+    });
+
+    render(<WeatherCentered />);
+
+    expect(screen.getByText('18°')).toBeInTheDocument();
   });
 });

@@ -21,19 +21,20 @@ export const useHourlyForecast = (weather: WeatherData) => {
       return [];
     }
 
+    const localtime = weather.localtime;
     const locationCurrentHour = parseInt(
-      weather.localtime.split(' ')[1].split(':')[0],
+      localtime.split(' ')[1].split(':')[0],
       10
     );
     const locationCurrentMinute = parseInt(
-      weather.localtime.split(' ')[1].split(':')[1],
+      localtime.split(' ')[1].split(':')[1],
       10
     );
 
     const currentHourIndex = weather.hourlyForecast.findIndex(hour => {
       const hourTime = parseInt(hour.time.split(' ')[1].split(':')[0], 10);
       const hourDate = hour.time.split(' ')[0];
-      const currentDate = weather.localtime.split(' ')[0];
+      const currentDate = localtime.split(' ')[0];
 
       // If it's a future date, include it
       if (hourDate > currentDate) {
