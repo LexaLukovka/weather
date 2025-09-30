@@ -1,6 +1,6 @@
 # Weather App
 
-A modern, responsive weather application built with React, TypeScript, Tailwind CSS v4, and shadcn/ui. Get comprehensive weather information including 7-day forecasts, hourly data, and location services with an elegant, adaptive interface.
+A modern, responsive weather application built with React 19, TypeScript 5.8, Tailwind CSS v4, and custom UI components. Features comprehensive weather information including 7-day forecasts, hourly data, location services, and an intelligent mock weather system for development with an elegant, adaptive interface.
 
 ## Features
 
@@ -36,12 +36,12 @@ A modern, responsive weather application built with React, TypeScript, Tailwind 
 ### Technical Features
 
 - **Real-time Updates**: Live weather data from WeatherAPI
-- **Type Safety**: Full TypeScript implementation with strict mode
-- **Comprehensive Testing**: 80+% of coverage and 49+ test files covering all components
-- **Accessibility**: ARIA labels, keyboard navigation, and screen reader support
-- **Persistent Storage**: Local storage for search history and preferences
-- **Error Handling**: Robust error handling with user-friendly messages
-- **Location Permissions**: Graceful handling of location access
+- **Type Safety**: Full TypeScript implementation with strict mode and comprehensive interfaces
+- **Comprehensive Testing**: 97% coverage with 80+ test files covering all components, hooks, services, and stores
+- **Persistent Storage**: Zustand with selective localStorage persistence for search history and preferences
+- **Advanced State Management**: Modular store architecture with separate actions, helpers, and types
+- **Error Handling**: Robust error handling with typed errors and user-friendly messages
+- **Location Services**: GPS geolocation with reverse geocoding fallback system
 
 ## Getting Started
 
@@ -84,6 +84,8 @@ Follow these steps to run the application on your local machine:
    VITE_WEATHERAPI_KEY=your_actual_api_key_here
    VITE_BASE_URL=https://api.weatherapi.com/v1
    ```
+
+   **Note**: Without environment variables, the app automatically uses the intelligent mock weather system that provides realistic weather data for testing and development.
 
 4. **Start the development server**
 
@@ -161,20 +163,25 @@ The free tier includes:
 ```
 src/
 ├── components/          # React components
-│   ├── ui/             # Reusable UI components (shadcn/ui)
 │   ├── weather/        # Weather display components
 │   ├── search/         # Search and city selection
 │   ├── layout/         # Layout and sidebar components
 │   ├── icons/          # Custom weather SVG icons
-│   └── __tests__/      # Component tests
-├── hooks/              # Custom React hooks (14 hooks)
+│   └── __tests__/      # Component tests (90+ test files)
+├── hooks/              # Custom React hooks (9 hooks)
 ├── services/           # API services and external integrations
-├── stores/             # Zustand state management
+│   ├── mockWeatherApi.ts    # Intelligent mock weather system
+│   ├── geolocation.ts       # GPS location services
+│   └── reverseGeocode.ts    # Coordinate to city conversion
+├── stores/             # Modular Zustand state management
+│   ├── weatherStore.ts      # Main store
+│   ├── weatherStore.actions.ts  # Action functions
+│   ├── weatherStore.helpers.ts  # Helper utilities
+│   └── weatherStore.types.ts    # Store type definitions
 ├── contexts/           # React contexts for weather data
-├── types/              # TypeScript type definitions
-├── constants/          # API configuration and constants
-├── utils/              # Utility and helper functions
-└── lib/                # Third-party library configurations
+├── types/              # Comprehensive TypeScript type definitions
+├── constants/          # API configuration and UI constants
+└── lib/                # Utility configurations
 ```
 
 ### Design Principles
@@ -212,14 +219,15 @@ src/
 ### Key Technologies
 
 - **React 19**: Latest React with hooks, concurrent features, and improved performance
-- **TypeScript 5.8**: Strict type safety with latest language features
-- **Tailwind CSS v4**: Next-generation utility-first CSS framework
-- **shadcn/ui**: Headless, accessible UI component library
-- **Zustand**: Lightweight state management with persistence
-- **Axios**: HTTP client for API requests with interceptors
-- **Vitest**: Fast unit testing with native ESM support
-- **Vite 7**: Lightning-fast build tool with HMR
-- **WeatherAPI**: Professional weather data service
+- **TypeScript 5.8**: Strict type safety with comprehensive interface definitions
+- **Tailwind CSS v4**: Next-generation utility-first CSS framework with JIT compilation
+- **Custom UI Components**: Lightweight, accessible components with variant support
+- **Zustand**: Modular state management with selective persistence middleware
+- **Axios**: HTTP client for API requests with comprehensive error handling
+- **Vitest**: Fast unit testing with 90+ test files and native ESM support
+- **Vite 7**: Lightning-fast build tool with HMR and optimized bundling
+- **Mock Weather System**: Intelligent fallback system for development and testing
+- **WeatherAPI**: Professional weather data service with full forecast support
 
 ## Testing
 
@@ -272,13 +280,14 @@ This project follows **Test-Driven Development (TDD)** principles:
 
 #### Current Coverage
 
-**49+ test files** providing comprehensive coverage:
+**80+ test files** providing comprehensive coverage:
 
-- **Component Tests**: All major UI components tested
-- **Hook Tests**: Custom React hooks with edge cases
-- **Service Tests**: API layer and error handling
-- **Store Tests**: State management and persistence
-- **Integration Tests**: Component interactions
+- **Component Tests**: All UI components with user interaction scenarios
+- **Hook Tests**: Custom React hooks with edge cases and state management
+- **Service Tests**: Both real API and mock weather service layers
+- **Store Tests**: Modular state management, actions, and persistence
+- **Integration Tests**: Component interactions and context providers
+- **Error Handling Tests**: Comprehensive error scenarios and recovery
 
 ### Test Files Structure
 
@@ -454,9 +463,11 @@ The app uses **WeatherAPI** for real-time weather data, providing:
 **Try these features:**
 
 - Search for any city name (e.g., "London", "Tokyo", "New York")
-- Allow location access for automatic weather detection
-- Explore detailed forecasts and weather metrics
-- Test error handling with invalid city names
+- Allow location access for automatic GPS-based weather detection
+- Explore detailed 7-day and 24-hour forecasts
+- Test comprehensive error handling with invalid city names
+- Experience smooth state management with search history
+- Try the responsive design across different devices
 
 ## Acknowledgments
 
